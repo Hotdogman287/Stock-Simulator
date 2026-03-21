@@ -6,11 +6,11 @@ import random
 window_width = 800
 window_height = 450
 
-
 #colors
 red = (255, 0, 0)
 green = (0, 255, 0)
-grey = (30, 30, 30)
+white = (255, 255, 255)
+grey = (50, 50, 50)
 
 
 
@@ -18,14 +18,19 @@ grey = (30, 30, 30)
 #window
 screen = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption("Stock Market Sim")
+pygame.draw.rect(screen, grey, [0, 0 , 60, window_height], 0)
+pygame.draw.rect(screen, grey, [60, 0 , window_width-60, 60], 0)
+pygame.draw.rect(screen, grey, [60, window_height-60 , window_width-60, 60], 0)
 
+#GENERATE RANDOM MARKET
 price_change = []
 gen = True
 num = 0
 num_gend = 0
-num_gen = int(input("how many prices should be generated?"))
+#num_gen = int(input("how many prices should be generated?"))
+num_gen = 23
 while gen:
-    num = random.randint(-20, 20)
+    num = random.randint(-10, 10)
     price_change.append(num)
     num_gend += 1
     if num_gend >= num_gen:
@@ -34,11 +39,17 @@ while gen:
 price_change.append(0)
 price_change.append(3)
 
-#price_change = [10, 5, -13, 9, 6, 10, -15, 21, -4, -10, 5, -20, -40, 21]
-prices = [0] #will be generated later
+print("The Price Change is:", price_change)
 
 
-starting_price = 0
+
+
+base_price = 100
+price_change = [1, -1, -1, 1, 2, -1, -2, 1, 1, -1, -1, 1]
+prices = [base_price] #will be generated later
+
+
+
 generating_price_list = True
 price_generation_step = 0
 
@@ -48,33 +59,40 @@ while generating_price_list:
         price_generation_step += 1
         if len(prices) >= len(price_change):
                generating_price_list = False
-               print(prices)
+               print("Total Prices", prices)
 
 
 
 
-drawn = 0
-prices_number = len(price_change)
-price_index = 0
-
-
-
-change = 0
 
 
 #resizing bars
 peak = max(prices)
-print(peak)
+peak_dif = peak - base_price
+print("Peak:", peak)
+
 trough = min(prices)
-print(trough)
+trough_dif = trough - base_price
+print("Trough:", trough)
+
+range = peak - trough
+
 x = 100
 graph_amplification = (window_height-200)/(peak - trough)
+
 print("graph amplification:", graph_amplification)
-y = 100 + (peak * graph_amplification)
+
+#WORK ON THIS
+y = 100 + (range - peak_dif)*graph_amplification+window_height -350
+
 print("starting height", y)
-pygame.draw.line(screen, grey, [x-20, y], [x+400, y])
+pygame.draw.line(screen, white, [x-20, y], [window_width-x, y], 3)
 
 #loop
+drawn = 0
+prices_number = len(price_change)
+price_index = 0
+change = 0
 running = True
 while running:
 
@@ -92,7 +110,7 @@ while running:
                 bar_color = red
                 pygame.draw.rect(screen, bar_color, [x, y, 20, -change], 0) #this is drawing the first rectangle
             else:
-                pygame.draw.line(screen, grey, [x, y], [x+20, y])
+                pygame.draw.line(screen, white, [x, y], [x+20, y])
 
             y = y - change
             x += 20
