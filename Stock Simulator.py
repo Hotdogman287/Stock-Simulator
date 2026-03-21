@@ -19,30 +19,54 @@ grey = (30, 30, 30)
 screen = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption("Stock Market Sim")
 
-price_change = .2
+
+
+price_change = [10, 5, -13, 9, 6, 10, -15, 21, -4, -10, 5, -20, -40]
+prices = [0] #will be generated later
+
+
+starting_price = 0
+generating_price_list = True
+price_generation_step = 0
+
+#generate total prices list
+while generating_price_list:
+        prices.append(prices[price_generation_step] + price_change[price_generation_step])
+        price_generation_step += 1
+        if len(prices) >= len(price_change):
+               generating_price_list = False
+               print(prices)
+
+
+
+
 drawn = 0
-price_change = [10, 5, -13, 9, 6, 10, -15, 21, -4, -10, 5, -20]
-prices = len(price_change)
+prices_number = len(price_change)
 price_index = 0
 
-#initial bar
-x = 100
-y = window_height/2
 
 
 change = 0
-
-
-pygame.draw.line(screen, grey, [x, y], [x+400, y])
 
 
 #loop
 running = True
 while running:
 
-        #drawing prices
-        while price_index < prices:
-            change = price_change[price_index]
+        #resizing bars
+        peak = max(price_change)
+        trough = min(price_change)
+
+        x = 100
+        graph_amplification = (window_height-200)/(peak - trough)
+        y = 100 + (peak-trough)*graph_amplification
+
+        pygame.draw.line(screen, grey, [x-20, y], [x+400, y])
+
+
+        #drawing prices_number
+        while price_index < prices_number:
+            change = graph_amplification*price_change[price_index]
             #draw to the screen
             if change >= 0:
                 bar_color = green
@@ -53,7 +77,7 @@ while running:
 
             y = y - change
             x += 20
-            print("PriceID:", price_index, "Change:", change)
+            #print("PriceID:", price_index, "Change:", change)
             
             price_index += 1
 
