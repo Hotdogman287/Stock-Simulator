@@ -21,8 +21,8 @@ pygame.display.set_caption("Stock Market Sim")
 
 price_change = .2
 drawn = 0
-price_list = [10, 5, 13, 9, 6, 10, 15, 21]
-prices = len(price_list)
+price_change = [10, 5, -13, 9, 6, 10, -15, 21, -4, -10, 5, -20]
+prices = len(price_change)
 price_index = 0
 
 #initial bar
@@ -30,7 +30,7 @@ x = 100
 y = window_height/2
 
 
-y_change = 0
+change = 0
 
 
 pygame.draw.line(screen, grey, [x, y], [x+400, y])
@@ -42,20 +42,18 @@ while running:
 
         #drawing prices
         while price_index < prices:
+            change = price_change[price_index]
             #draw to the screen
-            if y_change >= 0:
-                bar_color = red
+            if change >= 0:
+                bar_color = green
+                pygame.draw.rect(screen, bar_color, [x, y - change, 20, change], 0) #this is drawing the first rectangle
             else:
-                  bar_color = green
+                bar_color = red
+                pygame.draw.rect(screen, bar_color, [x, y, 20, -change], 0) #this is drawing the first rectangle
 
-
-
-            pygame.draw.rect(screen, bar_color, [x, y, 20, y_change], 0) #this is drawing the first rectangle
-            y_change = price_list[price_index]
-            #y_change = price_list[price_index] - y_change
-            #y = y - y_change
+            y = y - change
             x += 20
-            print("Set price", price_index, "at", x, "change of", y)
+            print("PriceID:", price_index, "Change:", change)
             
             price_index += 1
 
