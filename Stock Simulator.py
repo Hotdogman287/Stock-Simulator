@@ -1,5 +1,5 @@
 import pygame
-
+import random
 
 
 #starting variables
@@ -19,9 +19,22 @@ grey = (30, 30, 30)
 screen = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption("Stock Market Sim")
 
+price_change = []
+gen = True
+num = 0
+num_gend = 0
+num_gen = int(input("how many prices should be generated?"))
+while gen:
+    num = random.randint(-20, 20)
+    price_change.append(num)
+    num_gend += 1
+    if num_gend >= num_gen:
+        gen = False
 
+price_change.append(0)
+price_change.append(3)
 
-price_change = [10, 5, -13, 9, 6, 10, -15, 21, -4, -10, 5, -20, -40]
+#price_change = [10, 5, -13, 9, 6, 10, -15, 21, -4, -10, 5, -20, -40, 21]
 prices = [0] #will be generated later
 
 
@@ -49,31 +62,37 @@ price_index = 0
 change = 0
 
 
+#resizing bars
+peak = max(prices)
+print(peak)
+trough = min(prices)
+print(trough)
+x = 100
+graph_amplification = (window_height-200)/(peak - trough)
+print("graph amplification:", graph_amplification)
+y = 100 + (peak * graph_amplification)
+print("starting height", y)
+pygame.draw.line(screen, grey, [x-20, y], [x+400, y])
+
 #loop
 running = True
 while running:
 
-        #resizing bars
-        peak = max(price_change)
-        trough = min(price_change)
-
-        x = 100
-        graph_amplification = (window_height-200)/(peak - trough)
-        y = 100 + (peak-trough)*graph_amplification
-
-        pygame.draw.line(screen, grey, [x-20, y], [x+400, y])
+        
 
 
         #drawing prices_number
         while price_index < prices_number:
             change = graph_amplification*price_change[price_index]
             #draw to the screen
-            if change >= 0:
+            if change > 0:
                 bar_color = green
                 pygame.draw.rect(screen, bar_color, [x, y - change, 20, change], 0) #this is drawing the first rectangle
-            else:
+            elif change < 0:
                 bar_color = red
                 pygame.draw.rect(screen, bar_color, [x, y, 20, -change], 0) #this is drawing the first rectangle
+            else:
+                pygame.draw.line(screen, grey, [x, y], [x+20, y])
 
             y = y - change
             x += 20
