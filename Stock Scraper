@@ -1,0 +1,8 @@
+import yfinance as yf
+import datetime
+
+start_date = datetime.datetime(2019, 1, 1)
+end_date = datetime.datetime(2021, 1, 1)
+meta = yf.Ticker("^SPX")
+data = meta.history(start=start_date, end=end_date)
+print(data.to_string())
